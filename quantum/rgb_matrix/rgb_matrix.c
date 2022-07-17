@@ -120,6 +120,10 @@ uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS] = {{0}};
 last_hit_t g_last_hit_tracker;
 #endif // RGB_MATRIX_KEYREACTIVE_ENABLED
 
+#ifdef RGB_MATRIX_CUSTOM_USER
+uint8_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ] = {0};
+#endif
+
 // internals
 static bool            suspend_state     = false;
 static uint8_t         rgb_last_enable   = UINT8_MAX;
@@ -253,6 +257,12 @@ void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
         process_rgb_matrix_typing_heatmap(row, col);
     }
 #endif // defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+#ifdef RGB_MATRIX_CUSTOM_USER
+    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+    {
+        better_heatmap_handle_keypress( row, col );
+    }
+#endif
 }
 
 void rgb_matrix_test(void) {
