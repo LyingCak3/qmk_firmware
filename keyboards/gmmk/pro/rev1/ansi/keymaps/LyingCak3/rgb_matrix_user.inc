@@ -17,7 +17,7 @@ RGB_MATRIX_EFFECT( better_heatmap )
 #endif
 
 #ifndef RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE
-#define RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE 0x2f
+#define RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE 0x3f
 #endif
 
 // A timer to track the last time we decremented all heatmap values.
