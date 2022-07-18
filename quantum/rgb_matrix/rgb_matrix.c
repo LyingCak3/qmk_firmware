@@ -478,7 +478,21 @@ void rgb_matrix_indicators_advanced(effect_params_t *params) {
 
 __attribute__((weak)) void rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {}
 
-__attribute__((weak)) void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {}
+__attribute__((weak)) void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
+{
+    if (host_keyboard_led_state().caps_lock) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(3, 255, 255, 255); // assuming caps lock is at led #5
+    } else {
+        RGB rgb = { 0, 0, 0 };
+        if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+        {
+            uint8_t val = lc_rgb_frame_buffer[ 3 ];
+            HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
+            rgb = rgb_matrix_hsv_to_rgb(hsv);
+        }
+        RGB_MATRIX_INDICATOR_SET_COLOR(3, rgb.r, rgb.g, rgb.b);
+    }
+}
 
 void rgb_matrix_init(void) {
     rgb_matrix_driver.init();
