@@ -25,12 +25,12 @@ static uint16_t better_heatmap_decrease_timer = 0;
 // Whether we should decrement the heatmap values during the next update.
 static bool better_decrease_heatmap_values = false;
 
+static float scale_factor = 0.75f * ( 16.0f ) / ( 233.0f );
+
 static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
 {
     
     uint8_t pressed_led_point = g_led_config.matrix_co[ row ][ col ];
-    lc_rgb_frame_buffer[ pressed_led_point ] = qadd8(lc_rgb_frame_buffer[ pressed_led_point ], 16);
-
     if ( NO_LED != pressed_led_point )
     {
     #if defined(RGB_MATRIX_LED_PROCESS_LIMIT) && RGB_MATRIX_LED_PROCESS_LIMIT > 1
@@ -43,32 +43,17 @@ static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
             int16_t dx = g_led_config.point[i].x - g_led_config.point[pressed_led_point].x;
             int16_t dy = g_led_config.point[i].y - g_led_config.point[pressed_led_point].y;
 
-            uint8_t dist = sqrt16(dx * dx + dy * dy);
+            uint8_t dist = 233 - sqrt16(dx * dx + dy * dy);
 
-            if ( dist == 0 )
+            float increase_val = (float)dist * scale_factor;
+
+            lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], (uint8_t)( increase_val) );
+#ifdef CONSOLE_ENABLE
+            if ( ( i % 10 ) == 0 )
             {
-                continue;
+                dprintf( "i: %u, val: %u, dist: %u, inc: %u \n", i, lc_rgb_frame_buffer[ i ], dist, (uint8_t)increase_val );
             }
-            else if ( dist > 0 && dist < 12 )
-            {
-               lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], 16);
-            }
-            else if ( dist >= 12 && dist < 24 )
-            {
-               lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], 8);
-            }
-            else if ( dist >= 24 && dist < 36 )
-            {
-               lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], 4);
-            }
-            else if ( dist >= 36 && dist < 48 )
-            {
-               lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], 2);
-            }
-            else if ( dist >= 48 )
-            {
-               lc_rgb_frame_buffer[ i ] = qadd8(lc_rgb_frame_buffer[ i ], 1);
-            }
+#endif
 
         }
     #endif
