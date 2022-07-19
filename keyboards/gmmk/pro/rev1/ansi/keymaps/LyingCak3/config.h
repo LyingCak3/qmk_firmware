@@ -1,0 +1,7 @@
+
+
+#pragma once
+
+#define RGB_DISABLE_WHEN_USB_SUSPENDED
+#define RGB_TRIGGER_ON_KEYDOWN
+#define RGB_MATRIX_LED_PROCESS_LIMIT 0 
