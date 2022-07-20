@@ -13,12 +13,13 @@ RGB_MATRIX_EFFECT( better_heatmap )
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
 #ifndef RGB_MATRIX_TYPING_BETTER_HEATMAP_DECREASE_DELAY_MS
-#define RGB_MATRIX_TYPING_BETTER_HEATMAP_DECREASE_DELAY_MS 30
+#define RGB_MATRIX_TYPING_BETTER_HEATMAP_DECREASE_DELAY_MS 15
 #endif
 
-#ifndef RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE
-#define RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE 0x4f
-#endif
+
+static MUTEX_DECL( better_heatmap_mutex );
+
+static uint16_t better_heatmap_base_value = 95;
 
 static bool better_heatmap_initialized = false;
 // A timer to track the last time we decremented all heatmap values.
@@ -26,15 +27,29 @@ static uint16_t better_heatmap_decrease_timer = 0;
 // Whether we should decrement the heatmap values during the next update.
 static bool better_decrease_heatmap_values = false;
 
-static float better_heatmap_max_increase = 24.0f;
+static float better_heatmap_max_increase = 16.0f;
 static float better_heatmap_scale_factor = (1.0f - 0.03f);
+
+static uint16_t better_heatmap_qadd16( uint16_t lhs, uint16_t rhs )
+{
+    uint32_t t = lhs + rhs;
+    if ( t > 275 ) t = 275;
+    return t;
+}
+
+static uint16_t better_heatmap_qsub16( uint16_t lhs, uint16_t rhs )
+{
+    int32_t t = lhs - rhs;
+    if ( t < 0 ) t = 0;
+    return t;
+}
 
 static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
 {
     if ( better_heatmap_initialized )
     {
         uint8_t pressed_led_point = g_led_config.matrix_co[ row ][ col ];
-        if ( NO_LED != pressed_led_point )
+        if ( ( NO_LED != pressed_led_point ) && chMtxTryLock( &better_heatmap_mutex ) )
         {
         #if defined(RGB_MATRIX_LED_PROCESS_LIMIT) && RGB_MATRIX_LED_PROCESS_LIMIT > 1
             return;
@@ -50,7 +65,7 @@ static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
 
                 float increase_val = pow( better_heatmap_scale_factor, (float)dist) * better_heatmap_max_increase;
 
-                __STREXB( qadd8( __LDREXB(&lc_rgb_frame_buffer[ i ]), (uint8_t)( increase_val) ), &lc_rgb_frame_buffer[ i ] );
+                lc_rgb_frame_buffer[ i ] = better_heatmap_qadd16( lc_rgb_frame_buffer[ i ], (uint16_t)( increase_val) );
                 #ifdef CONSOLE_ENABLE
                 if ( ( i % 10 ) == 0 )
                 {
@@ -59,6 +74,7 @@ static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
                 #endif
             }
         #endif
+            chMtxUnlock( &better_heatmap_mutex );
         }
     }
 }
@@ -69,11 +85,14 @@ static bool better_heatmap( effect_params_t* params )
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
     if ( params->init )
     {
-        uint8_t val = RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE;
+        uint8_t val = better_heatmap_base_value;
         HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
         RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
         rgb_matrix_set_color_all( rgb.r, rgb.g, rgb.b);
-        memset(lc_rgb_frame_buffer, RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE, sizeof lc_rgb_frame_buffer);
+        for ( uint8_t i = led_min; i < led_max; ++i )
+        {
+            lc_rgb_frame_buffer[ i ] = better_heatmap_base_value;
+        }
     }
     else
     {
@@ -96,21 +115,31 @@ static bool better_heatmap( effect_params_t* params )
     {
         if (!HAS_ANY_FLAGS( g_led_config.flags[i], params->flags ) ) continue;
 
-        uint8_t val = __LDREXB( &lc_rgb_frame_buffer[ i ] );
-        HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
+        uint16_t val = lc_rgb_frame_buffer[ i ];
+        uint8_t  val8 = 0;
+        if ( 255 < val )
+        {
+            val8 = 255;
+        }
+        else
+        {
+            val8 = val;
+        }
+        HSV hsv = {170 - qsub8(val8, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val8) - 170) * 3, rgb_matrix_config.hsv.v)};
         RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
         rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
 
-        if (better_decrease_heatmap_values) {
-            val = qsub8(val, 4);
-            if ( RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE > val )
+        if ( better_decrease_heatmap_values && chMtxTryLock( &better_heatmap_mutex ) ) {
+            val = better_heatmap_qsub16(val, 4);
+            if ( better_heatmap_base_value > val )
             {
-                __STREXB( RGB_MATRIX_TYPING_BETTER_HEATMAP_LOWESEST_VALUE, &lc_rgb_frame_buffer[ i ] );
+                lc_rgb_frame_buffer[ i ] =  better_heatmap_base_value;
             }
             else
             {
-                __STREXB( val, &lc_rgb_frame_buffer[ i ] );
+                lc_rgb_frame_buffer[ i ] = val;
             }
+            chMtxUnlock( &better_heatmap_mutex );
         }
     }
 

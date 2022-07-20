@@ -121,7 +121,7 @@ last_hit_t g_last_hit_tracker;
 #endif // RGB_MATRIX_KEYREACTIVE_ENABLED
 
 #ifdef RGB_MATRIX_CUSTOM_USER
-uint8_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ] = {0};
+uint16_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ] = {0};
 #endif
 
 // internals

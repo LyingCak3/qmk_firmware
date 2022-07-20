@@ -265,5 +265,5 @@ extern uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS];
 #endif
 
 #ifdef RGB_MATRIX_CUSTOM_USER
-extern uint8_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ];
+extern uint16_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ];
 #endif
