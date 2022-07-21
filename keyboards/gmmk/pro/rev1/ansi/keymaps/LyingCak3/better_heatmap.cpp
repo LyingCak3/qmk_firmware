@@ -15,7 +15,7 @@ LyingCak3::BetterHeatMap::BetterHeatMap()
     , timerIncrement_( 15 )
     , timer_( 0 )
     , decrease_( false )
-    , baseIncrement_( 16.0f )
+    , baseIncrement_( 32.0f )
     , scaleFactor_( 1.0f - 0.03f )
 {}
 
