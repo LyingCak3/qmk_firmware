@@ -145,6 +145,14 @@ ifeq ("$(wildcard $(KEYMAP_PATH))", "")
     endif
 endif
 
+ifneq ("$(wildcard $(KEYMAP_PATH))", "")
+
+    LAYOUT_KEYBOARD_SRC := 
+    LAYOUT_KEYBOARD_SRC += $(wildcard $(KEYMAP_PATH)/*.c)
+    LAYOUT_KEYBOARD_SRC += $(wildcard $(KEYMAP_PATH)/*.cpp)
+
+endif
+
 # Have we found a keymap.json?
 ifneq ("$(wildcard $(KEYMAP_JSON))", "")
     KEYMAP_C := $(KEYMAP_OUTPUT)/src/keymap.c
@@ -394,6 +402,7 @@ endif
 SRC += \
     $(KEYBOARD_SRC) \
     $(KEYMAP_C) \
+    $(LAYOUT_KEYBOARD_SRC) \
     $(QUANTUM_SRC) \
     $(QUANTUM_DIR)/main.c \
 

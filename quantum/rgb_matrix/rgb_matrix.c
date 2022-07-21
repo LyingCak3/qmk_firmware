@@ -120,10 +120,6 @@ uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS] = {{0}};
 last_hit_t g_last_hit_tracker;
 #endif // RGB_MATRIX_KEYREACTIVE_ENABLED
 
-#ifdef RGB_MATRIX_CUSTOM_USER
-uint16_t lc_rgb_frame_buffer[ DRIVER_LED_TOTAL ] = {0};
-#endif
-
 // internals
 static bool            suspend_state     = false;
 static uint8_t         rgb_last_enable   = UINT8_MAX;
@@ -483,14 +479,14 @@ __attribute__((weak)) void rgb_matrix_indicators_advanced_user(uint8_t led_min, 
     if (host_keyboard_led_state().caps_lock) {
         RGB_MATRIX_INDICATOR_SET_COLOR(3, 255, 255, 255); // assuming caps lock is at led #5
     } else {
-        RGB rgb = { 0, 0, 0 };
-        if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
-        {
-            uint8_t val = lc_rgb_frame_buffer[ 3 ];
-            HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
-            rgb = rgb_matrix_hsv_to_rgb(hsv);
-        }
-        RGB_MATRIX_INDICATOR_SET_COLOR(3, rgb.r, rgb.g, rgb.b);
+        // RGB rgb = { 0, 0, 0 };
+        // if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+        // {
+        //     uint8_t val = lc_rgb_frame_buffer[ 3 ];
+        //     HSV hsv = {170 - qsub8(val, 85), rgb_matrix_config.hsv.s, scale8((qadd8(170, val) - 170) * 3, rgb_matrix_config.hsv.v)};
+        //     rgb = rgb_matrix_hsv_to_rgb(hsv);
+        // }
+        // RGB_MATRIX_INDICATOR_SET_COLOR(3, rgb.r, rgb.g, rgb.b);
     }
 }
 
