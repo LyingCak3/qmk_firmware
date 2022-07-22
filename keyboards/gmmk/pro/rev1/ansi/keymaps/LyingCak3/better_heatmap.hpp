@@ -2,6 +2,7 @@
 #ifndef BETTER_HEATMAP_HPP
 #define BETTER_HEATMAP_HPP
 
+#include "better_heatmap_config.hpp"
 #include "lc_custom_light_base.hpp"
 
 #include <cstdint>
@@ -24,7 +25,7 @@ public:
 
     virtual void ProcessKeyPress( uint8_t row, uint8_t col );
 
-    virtual bool ProcessRGB( effect_params_t* params );
+    virtual bool ProcessRGB( effect_params_t* params, BetterHeatmapConfig::BETTER_HEATMAP_MODE mode );
 
 protected:
 
@@ -46,6 +47,8 @@ private:
 
     const float baseIncrement_;
     const float scaleFactor_;
+
+    BetterHeatmapConfig::BETTER_HEATMAP_MODE mode_;
 
 };
 

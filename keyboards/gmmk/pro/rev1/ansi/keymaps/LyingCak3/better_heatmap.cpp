@@ -18,6 +18,7 @@ LyingCak3::BetterHeatMap::BetterHeatMap( void )
     , decrease_( false )
     , baseIncrement_( 32.0f )
     , scaleFactor_( 1.0f - 0.03f )
+    , mode_( BetterHeatmapConfig::COLOR )
 {}
 
 LyingCak3::BetterHeatMap::~BetterHeatMap( void ){}
@@ -41,13 +42,15 @@ void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col )
 
             float increase_val = std::pow( scaleFactor_, (float)dist) * baseIncrement_;
 
-            buffer_[ i ] = qadd16( buffer_[ i ], (uint16_t)( increase_val), (uint16_t)263 );
+            buffer_[ i ] = qadd16( buffer_[ i ], (uint16_t)( increase_val), 234 );
         }
     }
 }
 
-bool LyingCak3::BetterHeatMap::ProcessRGB( effect_params_t* params )
+bool LyingCak3::BetterHeatMap::ProcessRGB( effect_params_t* params, BetterHeatmapConfig::BETTER_HEATMAP_MODE mode )
 {
+
+    mode_ = mode;
 
     if ( params->init )
     {
@@ -108,7 +111,23 @@ void LyingCak3::BetterHeatMap::Initialize( effect_params_t* params )
 
 HSV LyingCak3::BetterHeatMap::uintToHSV( uint8_t val )
 {
-    HSV r = { rgb_matrix_config.hsv.h, val, rgb_matrix_config.hsv.v };
+    // unsigned mask;
+    // mask = ((1 << 2) - 1) << 0;
+    // uint8_t sat = val & mask;
+    // sat = 0x3F | ( sat << 6 );
+    // mask = ((1 << 8) - 1) << 2;
+    // uint8_t hue = val & mask;
+    // dprintf( "sat: %u, hue: %u\n", sat, hue );
+
+    HSV r = { 0, 0, 0};
+    if ( mode_ == BetterHeatmapConfig::COLOR )
+    {
+        r = { rgb_matrix_config.hsv.h, val, rgb_matrix_config.hsv.v };
+    }
+    else if ( mode_ == BetterHeatmapConfig::SATURATION )
+    {
+        r = { val, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v };
+    }
     return r;
 }
 

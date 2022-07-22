@@ -10,9 +10,9 @@ void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col  )
     betterHeatMap.ProcessKeyPress( row, col );
 }
 
-bool BetterHeatmapProcessRGB( effect_params_t* params )
+bool BetterHeatmapProcessRGB( effect_params_t* params, unsigned int mode )
 {
-    return betterHeatMap.ProcessRGB( params );
+    return betterHeatMap.ProcessRGB( params, static_cast< LyingCak3::BetterHeatmapConfig::BETTER_HEATMAP_MODE>( mode ) );
 }
 
 void BetterHeatmapHandleIndicators( uint8_t led_min, uint8_t led_max )

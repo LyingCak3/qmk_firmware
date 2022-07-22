@@ -27,8 +27,6 @@ public:
 
     virtual void HandleIndicators( void );
 
-    virtual bool ProcessRGB( effect_params_t* params ) = 0;
-
 protected:
 
     virtual void Initialize( effect_params_t* params ) = 0;

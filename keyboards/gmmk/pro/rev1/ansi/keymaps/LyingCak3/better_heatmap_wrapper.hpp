@@ -11,7 +11,7 @@ extern "C" {
 
 void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col  );
 
-bool BetterHeatmapProcessRGB( effect_params_t* params );
+bool BetterHeatmapProcessRGB( effect_params_t* params, unsigned int mode );
 
 void BetterHeatmapHandleIndicators( uint8_t led_min, uint8_t led_max );
 

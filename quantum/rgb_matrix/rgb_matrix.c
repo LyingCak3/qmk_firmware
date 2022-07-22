@@ -254,7 +254,9 @@ void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
     }
 #endif // defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
 #ifdef RGB_MATRIX_CUSTOM_USER
-    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
+        || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
+    )
     {
         better_heatmap_handle_keypress( row, col );
     }
@@ -453,7 +455,9 @@ void rgb_matrix_indicators(void) {
 __attribute__((weak)) void rgb_matrix_indicators_kb(void) {}
 
 __attribute__((weak)) void rgb_matrix_indicators_user(void) {
-    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
+        || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
+    )
     {
         BetterHeatmapHandleIndicatorsVoid();
     }
@@ -481,7 +485,9 @@ __attribute__((weak)) void rgb_matrix_indicators_advanced_kb(uint8_t led_min, ui
 
 __attribute__((weak)) void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 {
-    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap)
+    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
+        || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
+    )
     {
         BetterHeatmapHandleIndicators( led_min, led_max );
     }
