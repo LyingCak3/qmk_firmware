@@ -2,6 +2,8 @@
 #ifndef BETTER_HEATMAP_HPP
 #define BETTER_HEATMAP_HPP
 
+#include "lc_custom_light_base.hpp"
+
 #include <cstdint>
 
 extern "C" {
@@ -11,7 +13,7 @@ extern "C" {
 namespace LyingCak3
 {
 
-class BetterHeatMap
+class BetterHeatMap : public CustomListBase
 {
 
 public:
@@ -20,17 +22,13 @@ public:
 
     ~BetterHeatMap( void );
 
-    void ProcessKeyPress( uint8_t row, uint8_t col );
+    virtual void ProcessKeyPress( uint8_t row, uint8_t col );
 
-    bool ProcessRGB( effect_params_t* params );
+    virtual bool ProcessRGB( effect_params_t* params );
 
 protected:
 
-    void Initialize( effect_params_t* params );
-
-    uint16_t qadd16( uint16_t lhs, uint16_t rhs, uint16_t max_value );
-
-    uint16_t qsub16( uint16_t lhs, uint16_t rhs );
+    virtual void Initialize( effect_params_t* params );
 
     HSV uintToHSV( uint8_t val );
 

@@ -14,3 +14,13 @@ bool BetterHeatmapProcessRGB( effect_params_t* params )
 {
     return betterHeatMap.ProcessRGB( params );
 }
+
+void BetterHeatmapHandleIndicators( uint8_t led_min, uint8_t led_max )
+{
+    betterHeatMap.HandleIndicators( led_min, led_max );
+}
+
+void BetterHeatmapHandleIndicatorsVoid( void )
+{
+    betterHeatMap.HandleIndicators();
+}

@@ -9,8 +9,9 @@ extern "C" {
 #include <debug.h>
 }
 
-LyingCak3::BetterHeatMap::BetterHeatMap()
-    : buffer_()
+LyingCak3::BetterHeatMap::BetterHeatMap( void )
+    : CustomListBase()
+    , buffer_()
     , baseValue_( 0 )
     , timerIncrement_( 15 )
     , timer_( 0 )
@@ -19,7 +20,7 @@ LyingCak3::BetterHeatMap::BetterHeatMap()
     , scaleFactor_( 1.0f - 0.03f )
 {}
 
-LyingCak3::BetterHeatMap::~BetterHeatMap(){}
+LyingCak3::BetterHeatMap::~BetterHeatMap( void ){}
 
 void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col )
 {
@@ -85,15 +86,8 @@ bool LyingCak3::BetterHeatMap::ProcessRGB( effect_params_t* params )
         rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
 
         if ( decrease_ ) {
-            val = qsub16(val, 4);
-            if ( baseValue_ > val )
-            {
-                buffer_[ i ] =  baseValue_;
-            }
-            else
-            {
-                buffer_[ i ] = val;
-            }
+            val = qsub16(val, 4, baseValue_);
+            buffer_[ i ] = val;
         }
     }
 
@@ -122,18 +116,4 @@ RGB LyingCak3::BetterHeatMap::uintToRGB( uint8_t val )
 {
     HSV hsv = uintToHSV( val );
     return hsv_to_rgb( hsv) ;
-}
-
-uint16_t LyingCak3::BetterHeatMap::qadd16( uint16_t lhs, uint16_t rhs, uint16_t max_value )
-{
-    uint32_t t = lhs + rhs;
-    if ( t > max_value ) t = max_value;
-    return t;
-}
-
-uint16_t LyingCak3::BetterHeatMap::qsub16( uint16_t lhs, uint16_t rhs )
-{
-    int32_t t = lhs - rhs;
-    if ( t < 0 ) t = 0;
-    return t;
 }

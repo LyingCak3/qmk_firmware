@@ -13,6 +13,9 @@ void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col  );
 
 bool BetterHeatmapProcessRGB( effect_params_t* params );
 
+void BetterHeatmapHandleIndicators( uint8_t led_min, uint8_t led_max );
+
+void BetterHeatmapHandleIndicatorsVoid( void );
 
 #ifdef __cplusplus
 }
