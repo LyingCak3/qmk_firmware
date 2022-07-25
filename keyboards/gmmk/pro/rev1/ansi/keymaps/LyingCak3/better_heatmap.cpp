@@ -11,12 +11,11 @@ extern "C" {
 
 LyingCak3::BetterHeatMap::BetterHeatMap( void )
     : CustomListBase()
-    , buffer_()
     , baseValue_( 0 )
-    , timerIncrement_( 15 )
+    , timerIncrement_( 25 )
     , timer_( 0 )
     , decrease_( false )
-    , baseIncrement_( 32.0f )
+    , baseIncrement_( 16.0f )
     , scaleFactor_( 1.0f - 0.03f )
     , mode_( BetterHeatmapConfig::COLOR )
 {}
@@ -42,7 +41,7 @@ void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col )
 
             float increase_val = std::pow( scaleFactor_, (float)dist) * baseIncrement_;
 
-            buffer_[ i ] = qadd16( buffer_[ i ], (uint16_t)( increase_val), 234 );
+            LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ] = qadd16( LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ], (uint16_t)( increase_val), 234 );
         }
     }
 }
@@ -75,7 +74,7 @@ bool LyingCak3::BetterHeatMap::ProcessRGB( effect_params_t* params, BetterHeatma
     {
         if (!HAS_ANY_FLAGS( g_led_config.flags[i], params->flags ) ) continue;
 
-        uint16_t val = buffer_[ i ];
+        uint16_t val = LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ];
         uint8_t  val8 = 0;
         if ( 255 < val )
         {
@@ -90,7 +89,7 @@ bool LyingCak3::BetterHeatMap::ProcessRGB( effect_params_t* params, BetterHeatma
 
         if ( decrease_ ) {
             val = qsub16(val, 4, baseValue_);
-            buffer_[ i ] = val;
+            LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ] = val;
         }
     }
 
@@ -105,7 +104,7 @@ void LyingCak3::BetterHeatMap::Initialize( effect_params_t* params )
     rgb_matrix_set_color_all( rgb.r, rgb.g, rgb.b);
     for ( uint8_t i = led_min; i < led_max; ++i )
     {
-        buffer_[ i ] = baseValue_;
+        LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ] = baseValue_;
     }
 }
 
@@ -122,11 +121,12 @@ HSV LyingCak3::BetterHeatMap::uintToHSV( uint8_t val )
     HSV r = { 0, 0, 0};
     if ( mode_ == BetterHeatmapConfig::COLOR )
     {
-        r = { rgb_matrix_config.hsv.h, val, rgb_matrix_config.hsv.v };
+
+        r = { 160 - qsub8(val, 50), rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v };
     }
     else if ( mode_ == BetterHeatmapConfig::SATURATION )
     {
-        r = { val, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v };
+        r = { rgb_matrix_config.hsv.h, val , rgb_matrix_config.hsv.v };
     }
     return r;
 }

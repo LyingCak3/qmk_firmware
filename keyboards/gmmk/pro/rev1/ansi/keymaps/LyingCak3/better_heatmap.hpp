@@ -4,6 +4,7 @@
 
 #include "better_heatmap_config.hpp"
 #include "lc_custom_light_base.hpp"
+#include "lc_buffer.hpp"
 
 #include <cstdint>
 
@@ -37,9 +38,7 @@ protected:
 
 private:
 
-    uint16_t buffer_[ DRIVER_LED_TOTAL ];
-
-    const uint16_t baseValue_;
+    const uint8_t baseValue_;
 
     uint16_t timerIncrement_;
     uint16_t timer_;
