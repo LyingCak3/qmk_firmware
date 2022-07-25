@@ -8,12 +8,14 @@
 // (note the lack of semicolon after the macro!)
 RGB_MATRIX_EFFECT( better_heatmap_color )
 RGB_MATRIX_EFFECT( better_heatmap_sat )
+RGB_MATRIX_EFFECT( enigma )
 
 // Step 2.
 // Define effects inside the `RGB_MATRIX_CUSTOM_EFFECT_IMPLS` ifdef block
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
 #include "better_heatmap_wrapper.hpp"
+#include "enigma_wrapper.hpp"
 
 static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
 {
@@ -28,6 +30,12 @@ static bool better_heatmap_color( effect_params_t* params )
 static bool better_heatmap_sat( effect_params_t* params )
 {
     return BetterHeatmapProcessRGB( params, 1 );
+}
+
+static bool enigma( effect_params_t* params )
+{
+
+    return EnigmaProcessRGB( params );
 }
 
 #endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS
