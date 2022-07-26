@@ -48,23 +48,22 @@ bool LyingCak3::Enigma::EnigmaRGB::ProcessRGB( effect_params_t* params )
         Initialize( params );
     }
 
+    uint16_t max_tick = 32;
     for (uint8_t i = led_min; i < led_max; i++)
     {
+        uint16_t tick = max_tick;
         LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ] = qsub8( LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ], 8 );
         RGB_MATRIX_TEST_LED_FLAGS();
-        for (int8_t j = g_last_hit_tracker.count - 1; j >= 0; j--) {
-            if ( g_last_hit_tracker.index[j] == i )
+        for (int8_t j = g_last_hit_tracker.count - 1; j >= 0; --j) {
+            if ( ( g_last_hit_tracker.index[j] == i ) && ( g_last_hit_tracker.tick[j] < tick ) )
             {
-
+                tick = g_last_hit_tracker.tick[j];
                 uint8_t enigmaValue = enigma_.ProcessChiper( i );
                 LyingCak3::Buffers::LedBuffers::LED_BUFFER[ enigmaValue ] = 255;
-                
+                break;
             }
         }
-    }
 
-    for (uint8_t i = led_min; i < led_max; i++)
-    {
         HSV hsv = { 225, LyingCak3::Buffers::LedBuffers::LED_BUFFER[ i ], rgb_matrix_config.hsv.v };
         RGB rgb = hsv_to_rgb( hsv );
         rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
