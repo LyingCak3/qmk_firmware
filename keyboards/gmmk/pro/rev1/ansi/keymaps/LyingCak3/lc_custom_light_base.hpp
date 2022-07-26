@@ -35,6 +35,8 @@ protected:
 
     uint16_t qsub16( uint16_t lhs, uint16_t rhs, uint16_t min_value = 0 );
 
+    uint8_t qadd8Custom( uint8_t lhs, uint8_t rhs, uint16_t maxValue = 255 );
+
 private:
 
 };
