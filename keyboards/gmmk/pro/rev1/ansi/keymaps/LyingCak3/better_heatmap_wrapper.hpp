@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h>
 #include <rgb_matrix_types.h>
 
-void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col  );
+void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col, bool pressed );
 
 bool BetterHeatmapProcessRGB( effect_params_t* params, unsigned int mode );
 

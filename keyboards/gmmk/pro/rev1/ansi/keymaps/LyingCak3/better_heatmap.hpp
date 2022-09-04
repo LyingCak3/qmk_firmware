@@ -24,7 +24,7 @@ public:
 
     ~BetterHeatMap( void );
 
-    virtual void ProcessKeyPress( uint8_t row, uint8_t col );
+    virtual void ProcessKeyPress( uint8_t row, uint8_t col, bool pressed );
 
     virtual bool ProcessRGB( effect_params_t* params, BetterHeatmapConfig::BETTER_HEATMAP_MODE mode );
 

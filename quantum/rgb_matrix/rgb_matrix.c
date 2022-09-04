@@ -119,6 +119,10 @@ uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS] = {{0}};
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
 last_hit_t g_last_hit_tracker;
 #endif // RGB_MATRIX_KEYREACTIVE_ENABLED
+#ifdef RGB_MATRIX_HANDLE_HELD_KEY
+uint8_t g_rgb_key_state_buffer[MATRIX_ROWS][MATRIX_COLS] = {{ 0 }};
+uint16_t g_rgb_key_state_timer = 0;
+#endif
 
 // internals
 static bool            suspend_state     = false;
@@ -210,6 +214,18 @@ void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
+
+#ifdef RGB_MATRIX_HANDLE_HELD_KEY
+
+    g_rgb_key_state_buffer[ row ][ col ] = pressed == true ? ( PRESSED ) : ( RELEASED );
+
+#endif
+
+    process_rgb_matrix_effects( row, col, pressed );
+
+}
+
+void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed) {
 #ifndef RGB_MATRIX_SPLIT
     if (!is_keyboard_master()) return;
 #endif
@@ -258,7 +274,7 @@ void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
         || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
     )
     {
-        better_heatmap_handle_keypress( row, col );
+        better_heatmap_handle_keypress( row, col, pressed );
     }
 #endif
 }
@@ -432,6 +448,21 @@ void rgb_matrix_task(void) {
             rgb_task_start();
             break;
         case RENDERING:
+#ifdef RGB_MATRIX_HANDLE_HELD_KEY
+            if ( timer_elapsed( g_rgb_key_state_timer ) >= RGB_MATRIX_HANDLE_HELD_KEY_INCREMENT )
+            {
+                g_rgb_key_state_timer = timer_read();
+                for ( uint8_t r = 0; r < MATRIX_ROWS; ++r )
+                {
+                    for ( uint8_t c = 0; c <MATRIX_COLS; ++c )
+                    {
+
+                        process_rgb_matrix_effects( r, c, g_rgb_key_state_buffer[ r ][ c ]);
+
+                    }
+                }
+            }
+#endif
             rgb_task_render(effect);
             if (effect) {
                 rgb_matrix_indicators();

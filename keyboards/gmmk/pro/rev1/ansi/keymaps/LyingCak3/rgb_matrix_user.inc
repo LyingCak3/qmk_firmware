@@ -17,9 +17,9 @@ RGB_MATRIX_EFFECT( enigma )
 #include "better_heatmap_wrapper.hpp"
 #include "enigma_wrapper.hpp"
 
-static void better_heatmap_handle_keypress(uint8_t row, uint8_t col)
+static void better_heatmap_handle_keypress(uint8_t row, uint8_t col, bool pressed)
 {
-    BetterHeatmapProcessKeyPress( row, col );
+    BetterHeatmapProcessKeyPress( row, col, pressed );
 }
 
 static bool better_heatmap_color( effect_params_t* params )

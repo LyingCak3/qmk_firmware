@@ -5,9 +5,9 @@
 
 static LyingCak3::BetterHeatMap betterHeatMap;
 
-void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col  )
+void BetterHeatmapProcessKeyPress( uint8_t row, uint8_t col, bool pressed )
 {
-    betterHeatMap.ProcessKeyPress( row, col );
+    betterHeatMap.ProcessKeyPress( row, col, pressed );
 }
 
 bool BetterHeatmapProcessRGB( effect_params_t* params, unsigned int mode )

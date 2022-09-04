@@ -22,8 +22,11 @@ LyingCak3::BetterHeatMap::BetterHeatMap( void )
 
 LyingCak3::BetterHeatMap::~BetterHeatMap( void ){}
 
-void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col )
+void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col, bool pressed )
 {
+
+    if ( false == pressed ) return;
+
     uint8_t pressed_led_point = g_led_config.matrix_co[ row ][ col ];
     if ( ( NO_LED != pressed_led_point ) )
     {

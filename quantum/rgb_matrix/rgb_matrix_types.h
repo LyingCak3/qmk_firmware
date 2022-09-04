@@ -93,6 +93,14 @@ typedef union {
     };
 } rgb_config_t;
 
+#ifdef RGB_MATRIX_HANDLE_HELD_KEY
+enum RGB_MATRIX_KEY_STATE {
+    RELEASED = 0,
+    PRESSED,
+    NUM_KEY_STATES
+};
+#endif
+
 #if defined(_MSC_VER)
 #    pragma pack(pop)
 #endif

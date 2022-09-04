@@ -123,6 +123,7 @@ void rgb_matrix_set_color(int index, uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue);
 
 void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed);
+void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed);
 
 void rgb_matrix_task(void);
 
@@ -262,4 +263,9 @@ extern last_hit_t g_last_hit_tracker;
 #endif
 #ifdef RGB_MATRIX_FRAMEBUFFER_EFFECTS
 extern uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS];
+#endif
+
+#ifdef RGB_MATRIX_HANDLE_HELD_KEY
+extern uint8_t g_rgb_key_state_buffer[MATRIX_ROWS][MATRIX_COLS];
+extern uint16_t g_rgb_key_state_timer;
 #endif
