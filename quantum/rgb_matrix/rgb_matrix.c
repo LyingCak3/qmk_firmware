@@ -213,7 +213,11 @@ void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue) {
 #endif
 }
 
-void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
+void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) 
+{
+#ifndef RGB_MATRIX_SPLIT
+    if (!is_keyboard_master()) return;
+#endif
 
 #ifdef RGB_MATRIX_HANDLE_HELD_KEY
 
@@ -221,14 +225,6 @@ void process_rgb_matrix(uint8_t row, uint8_t col, bool pressed) {
 
 #endif
 
-    process_rgb_matrix_effects( row, col, pressed );
-
-}
-
-void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed) {
-#ifndef RGB_MATRIX_SPLIT
-    if (!is_keyboard_master()) return;
-#endif
 #if RGB_DISABLE_TIMEOUT > 0
     rgb_anykey_timer = 0;
 #endif // RGB_DISABLE_TIMEOUT > 0
@@ -269,6 +265,13 @@ void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed) {
         process_rgb_matrix_typing_heatmap(row, col);
     }
 #endif // defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+
+    process_rgb_matrix_effects( row, col, pressed );
+
+}
+
+void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed) {
+
 #ifdef RGB_MATRIX_CUSTOM_USER
     if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
         || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
@@ -277,6 +280,7 @@ void process_rgb_matrix_effects(uint8_t row, uint8_t col, bool pressed) {
         better_heatmap_handle_keypress( row, col, pressed );
     }
 #endif
+
 }
 
 void rgb_matrix_test(void) {
