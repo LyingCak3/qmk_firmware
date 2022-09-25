@@ -48,3 +48,10 @@ uint8_t LyingCak3::CustomListBase::qadd8Custom( uint8_t lhs, uint8_t rhs, uint16
     if (t > maxValue) t = maxValue;
     return t;
 }
+
+uint8_t LyingCak3::CustomListBase::qsub8Custom( uint8_t i, uint8_t j, int16_t minValue )
+{
+    int16_t t = i - j;
+    if (t < minValue) t = minValue;
+    return t;
+}

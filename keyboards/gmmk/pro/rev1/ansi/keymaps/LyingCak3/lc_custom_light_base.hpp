@@ -37,6 +37,8 @@ protected:
 
     uint8_t qadd8Custom( uint8_t lhs, uint8_t rhs, uint16_t maxValue = 255 );
 
+    uint8_t qsub8Custom( uint8_t i, uint8_t j, int16_t minValue = 0);
+
 private:
 
 };
