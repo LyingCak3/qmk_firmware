@@ -113,13 +113,6 @@ void LyingCak3::BetterHeatMap::Initialize( effect_params_t* params )
 
 HSV LyingCak3::BetterHeatMap::uintToHSV( uint8_t val )
 {
-    // unsigned mask;
-    // mask = ((1 << 2) - 1) << 0;
-    // uint8_t sat = val & mask;
-    // sat = 0x3F | ( sat << 6 );
-    // mask = ((1 << 8) - 1) << 2;
-    // uint8_t hue = val & mask;
-    // dprintf( "sat: %u, hue: %u\n", sat, hue );
 
     HSV r = { 0, 0, 0};
     if ( mode_ == BetterHeatmapConfig::COLOR )
