@@ -22,3 +22,6 @@
 	path = lib/enigma
 	url = https://github.com/LyingCak3/enigma-machine
 	branch = main
+[submodule "lib/pico-sdk"]
+	path = lib/pico-sdk
+	url = https://github.com/qmk/pico-sdk.git
