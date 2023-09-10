@@ -31,7 +31,7 @@ void LyingCak3::BetterHeatMap::ProcessKeyPress( uint8_t row, uint8_t col, bool p
     if ( ( NO_LED != pressed_led_point ) )
     {
         const uint8_t led_min = 0;
-        const uint8_t led_max = DRIVER_LED_TOTAL;
+        const uint8_t led_max = RGB_MATRIX_LED_COUNT;
         for ( uint8_t i = led_min; i < led_max; ++i )
         {
 

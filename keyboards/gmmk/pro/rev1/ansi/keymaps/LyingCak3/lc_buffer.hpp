@@ -18,7 +18,7 @@ class LedBuffers
 {
 
 public:
-    static uint8_t LED_BUFFER[ DRIVER_LED_TOTAL ];
+    static uint8_t LED_BUFFER[ RGB_MATRIX_LED_COUNT ];
 
 };
 

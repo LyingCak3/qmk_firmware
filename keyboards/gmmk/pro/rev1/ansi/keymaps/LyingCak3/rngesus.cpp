@@ -62,7 +62,7 @@ bool LyingCak3::RNGesus::RNGesus::ProcessRGB( effect_params_t* params )
         if ( true == trigger_ )
         {
             uint64_t rng =  LyingCak3::XORShift::xorshift128p(xorshiftState_);
-            uint8_t id = scale8( rng & 0xff, DRIVER_LED_TOTAL );
+            uint8_t id = scale8( rng & 0xff, RGB_MATRIX_LED_COUNT );
             LyingCak3::Buffers::LedBuffers::LED_BUFFER[id] = engagedValue_;
 
         }
