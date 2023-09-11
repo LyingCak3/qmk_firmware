@@ -15,6 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "rgb_matrix_types.h"
+#include "better_heatmap_wrapper.hpp"
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -80,3 +82,27 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     return false;
 }
 #endif // ENCODER_ENABLE
+
+bool rgb_matrix_indicators_user(void) {
+    if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
+        || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
+    )
+    {
+        BetterHeatmapHandleIndicatorsVoid();
+    }
+
+    return true;
+}
+
+// bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
+// {
+//     if ( rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_color
+//         || rgb_matrix_config.mode == RGB_MATRIX_CUSTOM_better_heatmap_sat
+//     )
+//     {
+//         BetterHeatmapHandleIndicators( led_min, led_max );
+//     }
+
+//     return true;
+
+// }
